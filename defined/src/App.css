@@ -8,3 +8,19 @@ canvas {
   top: 0;
   left: 0;
 }
+.navbar {
+  height: 50px;
+  background-color: #4064ac;
+  display: flex;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  padding: 0px 100px;
+  font-size: 20px;
+}
+.newPostCard {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
