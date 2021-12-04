@@ -24,7 +24,7 @@ function App() {
   }, [file]);
   return (
     <div>
-      <Navbar />
+      {/* <Navbar /> */}
       {image ? (
         <NewPost image={image} />
       ) : (
