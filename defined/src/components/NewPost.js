@@ -2,20 +2,18 @@ import React, { useEffect, useRef } from "react";
 import * as faceapi from "face-api.js";
 
 function NewPost({ image }) {
-  //   const { image } = props;
   const { url, width, height } = image;
   const imgRef = useRef();
   const canvasRef = useRef();
   // nhận dạng người trong khung hình
-
   function LoadLabeledImages() {
     const labels = [
-      "Black Widow",
+      "Black widow",
       "Captain America",
       "Captain Marvel",
       "Hawkeye",
       "Jim Rhodes",
-      "Thor",
+      "Thor odinson",
       "Tony Stark",
     ];
     return Promise.all(
@@ -23,7 +21,7 @@ function NewPost({ image }) {
         const descriptions = [];
         for (let i = 1; i <= 2; i++) {
           const img = await faceapi.fetchImage(
-            `https://raw.githubusercontent.com/WebDevSimplified/Face-Recognition-JavaScript/master/labeled_images/${label}/${i}.jpg`
+            `/labeled_images/${label}/${i}.jpg`
           ); // dữ liệu files ảnh
           const detections = await faceapi
             .detectSingleFace(img)
@@ -38,6 +36,8 @@ function NewPost({ image }) {
 
   const handleImage = async () => {
     // nhận dạng các khuôn mặt trên ảnh
+    // const labeledFaceDescriptors = await LoadLabeledImages();
+    // const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.6);
 
     const dections = await faceapi
       .detectAllFaces(imgRef.current, new faceapi.TinyFaceDetectorOptions())
@@ -50,17 +50,15 @@ function NewPost({ image }) {
     faceapi.matchDimensions(canvasRef.current, {
       width: width,
       height: height,
-    }); // gan khung nhan dang vao khuong mat trong anh
+    }); // gắn khung nhận dạng vào khuôn mặt trong ảnh
 
     const resize = faceapi.resizeResults(dections, {
       width: width,
       height: height,
     });
     //  nhận dạng danh tính trên ảnh
-    // const labeledFaceDescriptors = await LoadLabeledImages();
-    // const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.6);
-    // results.forEach((result, i) => {
     // const results = resize.map((d) => faceMatcher.findBestMatch(d.descriptor));
+    // results.forEach((result, i) => {
     //   const box = resize[i].detection.box;
     //   const drawBox = new faceapi.draw.DrawBox(box, {
     //     label: result.toString(),
@@ -69,7 +67,7 @@ function NewPost({ image }) {
     // });
 
     // vẽ khung nhận dạng khuông mặt
-    // faceapi.draw.drawDetections(canvasRef.current, resize);
+    faceapi.draw.drawDetections(canvasRef.current, resize);
     //  nhận dạng biểu cảm trên khuôn mặt
     faceapi.draw.drawFaceExpressions(canvasRef.current, resize);
     // vẽ đồ thị trên khuôn mặt
@@ -97,6 +95,7 @@ function NewPost({ image }) {
         .then(handleImage)
         .catch((e) => console.log(e));
     };
+
     imgRef.current && loadedModels();
   });
 
