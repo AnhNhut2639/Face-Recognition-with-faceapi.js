@@ -2,10 +2,15 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import Navbar from "./components/Navbar";
 import NewPost from "./components/NewPost";
+import defaultImage from "./asset/Image/default.png";
 
 function App() {
   const [file, setFile] = useState();
-  const [image, setImage] = useState();
+  const [image, setImage] = useState({
+    url: defaultImage,
+    width: 512,
+    height: 512,
+  });
 
   useEffect(() => {
     const getImage = () => {
@@ -23,18 +28,21 @@ function App() {
     file && getImage();
   }, [file]);
   return (
-    <div>
-      {/* <Navbar /> */}
-      {image ? (
-        <NewPost image={image} />
-      ) : (
-        <input
-          onChange={(e) => setFile(e.target.files[0])}
-          id="file"
-          type="file"
-        />
-      )}
-    </div>
+    <>
+      <Navbar />
+      <div className="container">
+        <div className="recognition-center">
+          <div className="input-recognition">
+            <input
+              onChange={(e) => setFile(e.target.files[0])}
+              id="file"
+              type="file"
+            />
+          </div>
+          <NewPost image={image} />
+        </div>
+      </div>
+    </>
   );
 }
 

@@ -17,7 +17,7 @@ function NewPost({ image }) {
       "Jim Rhodes",
       "Thor",
       "Tony Stark",
-    ]; // giamr thoi gian phai tai lai
+    ];
     return Promise.all(
       labels.map(async (label) => {
         const descriptions = [];
@@ -31,7 +31,6 @@ function NewPost({ image }) {
             .withFaceDescriptor();
           descriptions.push(detections.descriptor);
         }
-
         return new faceapi.LabeledFaceDescriptors(label, descriptions);
       })
     );
@@ -39,8 +38,7 @@ function NewPost({ image }) {
 
   const handleImage = async () => {
     // nhận dạng các khuôn mặt trên ảnh
-    const labeledFaceDescriptors = await LoadLabeledImages();
-    const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.6);
+
     const dections = await faceapi
       .detectAllFaces(imgRef.current, new faceapi.TinyFaceDetectorOptions())
       .withFaceLandmarks()
@@ -58,16 +56,17 @@ function NewPost({ image }) {
       width: width,
       height: height,
     });
-
-    const results = resize.map((d) => faceMatcher.findBestMatch(d.descriptor)); //  nhận dạng danh tính trên ảnh
-    console.log(resize);
-    results.forEach((result, i) => {
-      const box = resize[i].detection.box;
-      const drawBox = new faceapi.draw.DrawBox(box, {
-        label: result.toString(),
-      });
-      drawBox.draw(canvasRef.current);
-    });
+    //  nhận dạng danh tính trên ảnh
+    // const labeledFaceDescriptors = await LoadLabeledImages();
+    // const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.6);
+    // results.forEach((result, i) => {
+    // const results = resize.map((d) => faceMatcher.findBestMatch(d.descriptor));
+    //   const box = resize[i].detection.box;
+    //   const drawBox = new faceapi.draw.DrawBox(box, {
+    //     label: result.toString(),
+    //   });
+    //   drawBox.draw(canvasRef.current);
+    // });
 
     // vẽ khung nhận dạng khuông mặt
     // faceapi.draw.drawDetections(canvasRef.current, resize);
@@ -76,13 +75,13 @@ function NewPost({ image }) {
     // vẽ đồ thị trên khuôn mặt
     // faceapi.draw.drawFaceLandmarks(canvasRef.current, resize);
     // nhận dạng tuổi và giới tính
-    // resize.forEach((detection) => {
-    //   const box = detection.detection.box;
-    //   const drawBox = new faceapi.draw.DrawBox(box, {
-    //     label: Math.round(detection.age) + ", " + detection.gender,
-    //   });
-    //   drawBox.draw(canvasRef.current);
-    // });
+    resize.forEach((detection) => {
+      const box = detection.detection.box;
+      const drawBox = new faceapi.draw.DrawBox(box, {
+        label: Math.round(detection.age) + ", " + detection.gender,
+      });
+      drawBox.draw(canvasRef.current);
+    });
   };
 
   useEffect(() => {
@@ -102,7 +101,7 @@ function NewPost({ image }) {
   });
 
   return (
-    <div>
+    <div className="image-recognition">
       <img
         crossOrigin="anonymous"
         ref={imgRef}
